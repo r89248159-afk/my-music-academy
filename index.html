@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>My Music Academy</title>
+<style>
+:root{--bg:#0b1220;--panel:#131f32;--panel2:#1a2940;--text:#f4f7fb;--muted:#aab8cc;--accent:#72e0bd;--accent2:#91a7ff;--line:#2b3b54;--bad:#ff8585;--good:#70e0a5}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101b2e,#090f1b 65%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+header{padding:22px 16px 16px;max-width:900px;margin:auto}h1{font-size:27px;margin:0 0 5px}h2{font-size:20px;margin:0 0 12px}h3{font-size:16px;margin:0 0 7px}.sub{color:var(--muted);font-size:14px}
+main{max-width:900px;margin:auto;padding:0 14px 40px}.tabs{display:flex;gap:8px;overflow:auto;padding:10px 0 14px;position:sticky;top:0;background:#0c1422;z-index:5}
+button,select,input,textarea{font:inherit}button{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:#071710;font-weight:700;cursor:pointer}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.5}
+.tab{white-space:nowrap;padding:9px 13px;border-radius:20px;background:var(--panel2);color:var(--muted);border:1px solid var(--line)}.tab.active{background:var(--accent);color:#071710}
+.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px;box-shadow:0 8px 28px #0002}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.stat{background:var(--panel2);border-radius:14px;padding:13px}.stat strong{display:block;font-size:23px;color:var(--accent)}
+.pill{display:inline-block;background:#243650;color:#cbd9ed;border-radius:20px;padding:4px 9px;font-size:12px;margin:3px 4px 3px 0}
+label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}select,input,textarea{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#0c1728;color:var(--text)}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row button{flex:0 0 auto}
+.bigfreq{font-size:42px;font-weight:800;letter-spacing:-1px;color:var(--accent);margin:8px 0}.meter{height:12px;background:#26364e;border-radius:20px;overflow:hidden;margin:12px 0}.meter>div{height:100%;width:0;background:var(--accent);transition:width .1s}
+.result{font-size:15px;color:var(--muted);min-height:25px}.good{color:var(--good)}.bad{color:var(--bad)}
+.listitem{padding:12px 0;border-bottom:1px solid var(--line)}.listitem:last-child{border:0}.listitem p{margin:5px 0;color:var(--muted);font-size:14px}
+.small{font-size:12px;color:var(--muted)}.hide{display:none!important}.answer{display:block;text-align:left;width:100%;margin:7px 0;background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>My Music Academy</h1>
+  <div class="sub" id="tagline">Your personal music-learning space · మీ సంగీత అభ్యాస స్థలం</div>
+  <div style="margin-top:12px" class="row">
+    <span class="pill">Guitar first</span><span class="pill">Ear training</span><span class="pill">Music theory</span>
+    <select id="language" style="max-width:145px" aria-label="Language"><option value="en">English</option><option value="te">తెలుగు (Telugu)</option></select>
+  </div>
+</header>
+<main>
+<nav class="tabs">
+ <button class="tab active" data-page="home">Home</button><button class="tab" data-page="courses">Courses</button><button class="tab" data-page="pitch">Pitch Trainer</button><button class="tab" data-page="assistant">Assistant</button><button class="tab" data-page="practice">Practice</button><button class="tab" data-page="exams">Exams</button>
+</nav>
+
+<section class="page active" id="home">
+ <div class="card">
+  <h2 id="welcome">Welcome to your academy</h2>
+  <p class="sub" id="welcomeText">Learn step by step. Practise, record your progress, and test what you learn.</p>
+  <div class="grid">
+   <div class="stat"><strong id="daysCount">0</strong><span class="small">Practice sessions</span></div>
+   <div class="stat"><strong id="minutesCount">0</strong><span class="small">Minutes practised</span></div>
+   <div class="stat"><strong id="examCount">0</strong><span class="small">Tests completed</span></div>
+  </div>
+ </div>
+ <div class="card"><h2>Start here</h2>
+  <div class="listitem"><b>1. Tune and hold your guitar correctly</b><p>Learn the names of the six strings and how to tune safely.</p></div>
+  <div class="listitem"><b>2. Build rhythm</b><p>Count 1, 2, 3, 4 and practise slow down-up strumming.</p></div>
+  <div class="listitem"><b>3. Train your ear</b><p>Match one steady note with your voice using the Pitch Trainer.</p></div>
+  <div class="listitem"><b>4. Learn music theory</b><p>Start with notes, semitones, tones and the musical alphabet.</p></div>
+ </div>
+</section>
+
+<section class="page" id="courses">
+ <div class="card"><h2>Academy departments</h2><p class="sub">Your full learning roadmap. Start with foundations and unlock harder topics as you improve.</p>
+  <div id="courseList"></div>
+ </div>
+</section>
+
+<section class="page" id="pitch">
+ <div class="card">
+  <h2>Voice Pitch Trainer</h2>
+  <p class="sub">Sing or hum one steady note. The microphone measures its pitch and compares it with your chosen target.</p>
+  <label for="targetNote">Target note</label>
+  <select id="targetNote">
+   <option value="261.63">C4 — 261.63 Hz</option><option value="293.66">D4 — 293.66 Hz</option><option value="329.63">E4 — 329.63 Hz</option><option value="349.23">F4 — 349.23 Hz</option><option value="392.00">G4 — 392.00 Hz</option><option value="440" selected>A4 — 440 Hz</option><option value="493.88">B4 — 493.88 Hz</option><option value="523.25">C5 — 523.25 Hz</option>
+  </select>
+  <div class="row" style="margin-top:13px"><button id="startPitch">Start microphone</button><button class="secondary" id="stopPitch" disabled>Stop</button></div>
+  <div class="small" style="margin-top:10px">Allow microphone access when Chrome asks. Use a quiet room and sing one note steadily for 2–3 seconds.</div>
+  <div class="bigfreq" id="frequency">— Hz</div>
+  <div id="noteName" style="font-size:19px;font-weight:700">Waiting for sound</div>
+  <div class="result" id="pitchResult">Your pitch result will appear here.</div>
+  <div class="meter"><div id="pitchMeter"></div></div>
+  <div class="row"><div class="stat"><strong id="cents">—</strong><span class="small">Cents from target</span></div><div class="stat"><strong id="targetHz">440</strong><span class="small">Target frequency (Hz)</span></div></div>
+ </div>
+ <div class="card"><h3>How to practise</h3><ol class="sub"><li>Select a target note.</li><li>Tap Start microphone.</li><li>Sing “aa” gently and hold the note.</li><li>Try to bring the cents reading close to 0.</li><li>Repeat 5 times, resting between attempts.</li></ol><p class="small">Green means close (within 10 cents). This is an estimate from your phone microphone; background noise and other instruments can affect it. It measures pitch, not exact vocal tone quality.</p></div>
+</section>
+
+<section class="page" id="assistant">
+ <div class="card"><h2>Music Mentor Assistant</h2><p class="sub">Use text or voice. Version 1 uses built-in browser speech tools and simple commands; a connected generative AI tutor will be added in a later version.</p>
+  <label for="assistantInput">Ask a music question</label><textarea id="assistantInput" rows="3" placeholder="Example: Explain the C major scale"></textarea>
+  <div class="row" style="margin-top:9px"><button id="askAssistant">Ask</button><button class="secondary" id="speakButton">Speak command</button><button class="secondary" id="stopSpeech">Stop voice</button></div>
+  <div class="card" style="margin-top:13px;background:#0c1728"><b>Mentor response</b><p id="assistantReply" class="sub">Try: “What is a note?”, “Start pitch trainer”, or “Give me a practice plan”.</p></div>
+  <p class="small" id="voiceStatus">Voice input availability depends on your browser. Chrome on Android is recommended.</p>
+ </div>
+</section>
+
+<section class="page" id="practice">
+ <div class="card"><h2>Practice journal</h2><label for="practiceTopic">What did you practise?</label><input id="practiceTopic" placeholder="Example: C and G chord changes">
+  <div class="row"><div><label for="practiceMinutes">Minutes</label><input id="practiceMinutes" type="number" min="1" max="600" value="20"></div><div><label for="practiceNote">How did it go?</label><select id="practiceNote"><option>Good</option><option>Okay</option><option>Difficult</option></select></div></div>
+  <button id="savePractice" style="margin-top:12px">Save practice</button>
+ </div>
+ <div class="card"><h2>Recent practice</h2><div id="practiceHistory" class="sub">No practice sessions yet.</div></div>
+</section>
+
+<section class="page" id="exams">
+ <div class="card"><h2>Examination centre</h2><p class="sub">Tests are based on the beginner topics included in this first version. More detailed practical and listening exams will be added in later versions.</p>
+  <div class="grid"><button class="secondary" data-exam="Weekly">Weekly test</button><button class="secondary" data-exam="Monthly">Monthly test</button><button class="secondary" data-exam="Level">Level test</button></div>
+  <div id="quizArea" style="margin-top:16px"></div>
+ </div>
+ <div class="card"><h3>Test history</h3><div id="examHistory" class="sub">No tests completed yet.</div></div>
+</section>
+<footer>My Music Academy · Version 1 · Progress is saved on this device.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const courses=[
+ ["Guitar Foundations","Posture, tuning, string names, picking, finger independence","Beginner"],
+ ["Chords & Harmony","Open chords, barre chords, chord families, progressions and inversions","Beginner → Advanced"],
+ ["Strumming & Rhythm","Down-up strokes, subdivisions, accents, 3/4, 4/4 and 6/8 grooves","Beginner → Advanced"],
+ ["Lead Guitar & Scales","Major, minor, pentatonic, blues, modes and lead techniques","Beginner → Advanced"],
+ ["Fretboard Mastery","Note locations, octave shapes, roots and movable scale patterns","Beginner → Advanced"],
+ ["Ear Training & Voice Pitch","Pitch matching, intervals, melodies, chord quality and listening","Beginner → Advanced"],
+ ["Music Theory","Notes, intervals, scales, keys, harmony and composition","Beginner → Advanced"],
+ ["Indian Music & Alankars","Sa Re Ga Ma, swaras, alankar patterns, ragas and practice","Beginner → Advanced"],
+ ["Melodica & Keyboard Skills","Note layout, scales, melody and breath control","Beginner → Intermediate"],
+ ["Drums & Percussion","Pulse, kick, snare, hi-hat, grooves, fills and rhythm reading","Beginner → Intermediate"],
+ ["Songs & Fingerstyle","Song sections, chord rhythm, lead parts and fingerstyle","Beginner → Advanced"],
+ ["Recording & Music Production","Recording, editing, mixing, effects and arranging","Beginner → Advanced"]
+];
+$("courseList").innerHTML=courses.map((c,i)=>`<div class="listitem"><b>${i+1}. ${c[0]}</b><p>${c[1]}</p><span class="pill">${c[2]}</span></div>`).join("");
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.page===id));}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+let practices=JSON.parse(localStorage.getItem("mma_practices")||"[]");
+let exams=JSON.parse(localStorage.getItem("mma_exams")||"[]");
+function render(){
+ $("daysCount").textContent=practices.length;
+ $("minutesCount").textContent=practices.reduce((a,p)=>a+p.minutes,0);
+ $("examCount").textContent=exams.length;
+ $("practiceHistory").innerHTML=practices.length?practices.slice().reverse().slice(0,10).map(p=>`<div class="listitem"><b>${escapeHtml(p.topic)}</b><p>${p.minutes} min · ${escapeHtml(p.note)} · ${p.date}</p></div>`).join(""):"No practice sessions yet.";
+ $("examHistory").innerHTML=exams.length?exams.slice().reverse().slice(0,8).map(e=>`<div class="listitem"><b>${e.type} test: ${e.score}/${e.total}</b><p>${e.date}</p></div>`).join(""):"No tests completed yet.";
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+$("savePractice").onclick=()=>{let topic=$("practiceTopic").value.trim(),minutes=Number($("practiceMinutes").value);if(!topic||!Number.isFinite(minutes)||minutes<1){alert("Enter a practice topic and at least 1 minute.");return;}practices.push({topic,minutes,note:$("practiceNote").value,date:new Date().toLocaleDateString()});localStorage.setItem("mma_practices",JSON.stringify(practices));$("practiceTopic").value="";render();};
+render();
+
+// Pitch detector: autocorrelation estimates the strongest repeating frequency in the mic signal.
+let audioContext,stream,source,analyser,pitchFrame=null,running=false;
+function autoCorrelate(buf,sampleRate){
+ let SIZE=buf.length,rms=0;for(let i=0;i<SIZE;i++)rms+=buf[i]*buf[i];rms=Math.sqrt(rms/SIZE);if(rms<0.012)return -1;
+ let r1=0,r2=SIZE-1,thres=0.2;
+ for(let i=0;i<SIZE/2;i++){if(Math.abs(buf[i])<thres){r1=i;break;}}
+ for(let i=1;i<SIZE/2;i++){if(Math.abs(buf[SIZE-i])<thres){r2=SIZE-i;break;}}
+ buf=buf.slice(r1,r2);SIZE=buf.length;let c=new Float32Array(SIZE);
+ for(let i=0;i<SIZE;i++)for(let j=0;j<SIZE-i;j++)c[i]+=buf[j]*buf[j+i];
+ let d=0;while(c[d]>c[d+1])d++;
+ let max=-1,maxpos=-1;for(let i=d;i<SIZE;i++){if(c[i]>max){max=c[i];maxpos=i;}}
+ if(maxpos<=0)return -1;
+ let x1=c[maxpos-1],x2=c[maxpos],x3=c[maxpos+1],a=(x1+x3-2*x2)/2,b=(x3-x1)/2,shift=a?-.5*b/a:0;
+ let period=maxpos+shift;return period>0?sampleRate/period:-1;
+}
+function freqToNote(f){let midi=Math.round(69+12*Math.log2(f/440));let names=["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];return names[(midi%12+12)%12]+(Math.floor(midi/12)-1);}
+function pitchLoop(){
+ if(!running)return;
+ let data=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(data);
+ let f=autoCorrelate(data,audioContext.sampleRate);
+ if(f>55&&f<1100){
+  let target=Number($("targetNote").value),cents=Math.round(1200*Math.log2(f/target)),note=freqToNote(f),targetName=freqToNote(target);
+  $("frequency").textContent=f.toFixed(2)+" Hz";$("noteName").textContent=note+" · target "+targetName;
+  $("cents").textContent=(cents>0?"+":"")+cents;
+  $("pitchResult").textContent=Math.abs(cents)<=10?"Excellent — your pitch is very close!":cents<0?"A little flat — gently raise your pitch.":"A little sharp — gently lower your pitch.";
+  $("pitchResult").className="result "+(Math.abs(cents)<=10?"good":"bad");
+  $("pitchMeter").style.width=Math.max(0,100-Math.min(100,Math.abs(cents)/2))+"%";
+ }else{$("noteName").textContent="No clear steady note detected";$("pitchResult").textContent="Sing or hum one note steadily, closer to the phone.";}
+ pitchFrame=requestAnimationFrame(pitchLoop);
+}
+$("targetNote").onchange=()=>{$("targetHz").textContent=Number($("targetNote").value).toFixed(2);};
+$("startPitch").onclick=async()=>{
+ try{
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Microphone access needs a secure HTTPS website. Open this page on an HTTPS host.");
+  stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  audioContext=new (window.AudioContext||window.webkitAudioContext)();source=audioContext.createMediaStreamSource(stream);analyser=audioContext.createAnalyser();analyser.fftSize=2048;source.connect(analyser);
+  running=true;$("startPitch").disabled=true;$("stopPitch").disabled=false;$("pitchResult").textContent="Listening…";pitchLoop();
+ }catch(e){alert("Could not start microphone: "+e.message);}
+};
+$("stopPitch").onclick=()=>{running=false;if(pitchFrame)cancelAnimationFrame(pitchFrame);if(stream)stream.getTracks().forEach(t=>t.stop());if(audioContext)audioContext.close();$("startPitch").disabled=false;$("stopPitch").disabled=true;$("pitchResult").textContent="Microphone stopped.";};
+
+// Simple bilingual helper and browser speech features (not a cloud AI connection yet).
+const replies={
+ en:{
+  "what is a note":"A musical note is a sound with a particular pitch. The basic note names are A, B, C, D, E, F and G.",
+  "c major scale":"The C major scale is C, D, E, F, G, A, B, then C. It has no sharps or flats. Practise slowly and say each note name.",
+  "practice plan":"Today's 30-minute starter plan: 5 minutes tuning and posture, 10 minutes chord changes, 10 minutes slow strumming with a beat, and 5 minutes pitch matching.",
+  "start pitch trainer":"Open the Pitch Trainer tab, choose a target note, then tap Start microphone. Sing one steady note and try to get close to zero cents.",
+  "default":"I can help with beginner music topics in this first version. Try asking: What is a note? Explain the C major scale. Give me a practice plan. Or open the Pitch Trainer."
+ },
+ te:{
+  "what is a note":"సంగీత స్వరం అంటే ఒక నిర్దిష్ట పిచ్ ఉన్న శబ్దం. ప్రాథమిక స్వరాల పేర్లు A, B, C, D, E, F, G.",
+  "c major scale":"C మేజర్ స్కేల్: C, D, E, F, G, A, B, తర్వాత C. ఇందులో షార్ప్స్ లేదా ఫ్లాట్స్ ఉండవు. నెమ్మదిగా సాధన చేయండి.",
+  "practice plan":"ఈరోజు 30 నిమిషాల సాధన: 5 నిమిషాలు ట్యూనింగ్, 10 నిమిషాలు కార్డ్ మార్పులు, 10 నిమిషాలు నెమ్మదిగా స్ట్రమ్మింగ్, 5 నిమిషాలు పిచ్ మ్యాచ్ చేయడం.",
+  "start pitch trainer":"Pitch Trainer ట్యాబ్ తెరిచి ఒక స్వరం ఎంచుకోండి. Start microphone నొక్కి అదే స్వరాన్ని స్థిరంగా పాడండి. Cents విలువ సున్నాకు దగ్గరగా తీసుకురండి.",
+  "default":"ఈ మొదటి వెర్షన్‌లో ప్రాథమిక సంగీత విషయాలకు సహాయం చేస్తాను. What is a note? లేదా C major scale వివరించు అని అడగండి. Pitch Trainer కూడా తెరవవచ్చు."
+ }
+};
+function answerQuestion(q,speak=true){
+ let lang=$("language").value,low=q.toLowerCase(),dict=replies[lang],key=Object.keys(dict).find(k=>k!=="default"&&low.includes(k));
+ let ans=dict[key||"default"];
+ $("assistantReply").textContent=ans;
+ if(speak)say(ans);
+ if(low.includes("pitch trainer")||low.includes("microphone"))showPage("pitch");
+}
+$("askAssistant").onclick=()=>{let q=$("assistantInput").value.trim();if(q)answerQuestion(q);};
+let currentUtterance;
+function say(text){if(!("speechSynthesis"in window))return;window.speechSynthesis.cancel();currentUtterance=new SpeechSynthesisUtterance(text);currentUtterance.lang=$("language").value==="te"?"te-IN":"en-IN";window.speechSynthesis.speak(currentUtterance);}
+$("stopSpeech").onclick=()=>window.speechSynthesis&&window.speechSynthesis.cancel();
+$("speakButton").onclick=()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){$("voiceStatus").textContent="Speech recognition is not available in this browser. Use text input, or try Chrome.";return;}
+ let rec=new SR();rec.lang=$("language").value==="te"?"te-IN":"en-IN";rec.interimResults=false;rec.maxAlternatives=1;
+ $("voiceStatus").textContent="Listening… Speak now.";
+ rec.onresult=e=>{let q=e.results[0][0].transcript;$("assistantInput").value=q;$("voiceStatus").textContent="Heard: "+q;answerQuestion(q);};
+ rec.onerror=e=>$("voiceStatus").textContent="Voice input error: "+e.error+". You can type instead.";
+ rec.onend=()=>{};rec.start();
+};
+$("language").onchange=()=>{if($("language").value==="te"){$("tagline").textContent="మీ వ్యక్తిగత సంగీత అభ్యాస స్థలం";$("welcome").textContent="మీ సంగీత అకాడమీకి స్వాగతం";$("welcomeText").textContent="దశలవారీగా నేర్చుకోండి. సాధన చేయండి, పురోగతిని నమోదు చేయండి.";}else{$("tagline").textContent="Your personal music-learning space · మీ సంగీత అభ్యాస స్థలం";$("welcome").textContent="Welcome to your academy";$("welcomeText").textContent="Learn step by step. Practise, record your progress, and test what you learn.";}};
+
+// Basic beginner quiz. Questions are deliberately limited to concepts introduced on the home screen.
+const quiz=[
+ {q:"How many basic letter names are used in music?",a:["5","7","12"],c:1,why:"There are seven letter names: A, B, C, D, E, F and G."},
+ {q:"Which frequency is the standard A4 tuning reference?",a:["220 Hz","440 Hz","880 Hz"],c:1,why:"A4 is commonly tuned to 440 Hz."},
+ {q:"What does BPM mean?",a:["Beats per minute","Bars per melody","Bass pitch measure"],c:0,why:"BPM means beats per minute; it describes tempo."},
+ {q:"Which scale uses only the white-note names C through B?",a:["C major","A minor pentatonic","G blues"],c:0,why:"C major is C, D, E, F, G, A, B."},
+ {q:"What should you do to match a target pitch?",a:["Sing any note quickly","Hold a steady note and adjust","Strum all strings"],c:1,why:"Hold one steady note and adjust until the measured pitch is close."}
+];
+let activeQuiz=[],quizType="";
+document.querySelectorAll("[data-exam]").forEach(b=>b.onclick=()=>startQuiz(b.dataset.exam));
+function startQuiz(type){quizType=type;activeQuiz=quiz;let idx=0,score=0;
+ function draw(){if(idx>=activeQuiz.length){exams.push({type,score,total:activeQuiz.length,date:new Date().toLocaleDateString()});localStorage.setItem("mma_exams",JSON.stringify(exams));$("quizArea").innerHTML=`<h3>${type} test completed</h3><p class="bigfreq">${score}/${activeQuiz.length}</p><p class="sub">${score>=4?"Strong result. Keep practising.":"Review the explanations and try again later."}</p>`;render();return;}
+ let q=activeQuiz[idx];$("quizArea").innerHTML=`<div class="pill">${type} · Question ${idx+1} of ${activeQuiz.length}</div><h3 style="margin-top:12px">${q.q}</h3>${q.a.map((a,i)=>`<button class="answer" data-answer="${i}">${a}</button>`).join("")}<p class="small" id="feedback"></p>`;
+ document.querySelectorAll("[data-answer]").forEach(btn=>btn.onclick=()=>{let chosen=Number(btn.dataset.answer),correct=chosen===q.c;if(correct)score++;$("feedback").textContent=(correct?"Correct. ":"Not quite. ")+q.why;$("feedback").className=correct?"good":"bad";document.querySelectorAll("[data-answer]").forEach(x=>x.disabled=true);let next=document.createElement("button");next.textContent=idx===activeQuiz.length-1?"Finish test":"Next question";next.style.marginTop="10px";next.onclick=()=>{idx++;draw();};$("quizArea").appendChild(next);});
+ }
+ draw();
+}
+</script>
+</body>
+</html>
